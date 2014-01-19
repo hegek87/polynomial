@@ -77,7 +77,39 @@ double *Polynomial::solveQuadratic(){
 }
 	
 	
-double *Polynomial::solveCubic(){return 0;}
+double *Polynomial::solveCubic(){
+	if(coeffs[3] == 0){
+		return solveQuadratic();
+	}
+	if(coeffs[1] == 0 && coeffs[2] == 0){
+		double *x = new double[1];
+		*x = cbrt(-coeffs[0] / coeffs[3]);
+		return x;
+	}
+	if(coeffs[0] == 0){
+		double temp[3] = {coeffs[1], coeffs[2], coeffs[3]);
+		Polynomial p(temp, 2);
+		double *x = p.solveQuadratic();
+		double *y = new double[3];
+		*y = 0, *(y+1) = *x, *(y+2) = *(x+1);
+		return y;
+	}
+	double a = coeffs[3], b = coeffs[2], c = coeffs[1], d = coeffs[0];
+	double p = -b / (3*a), q = (p*p*p)+((b*c-3*a*d)/(6*a*a));
+	double r = c / (3*a);
+	double *x = new double[2];
+	*x = cbrt(q + sqrt(q*q+((r-p*p)*(r-p*p)*(r-p*p))));
+	*x += cbrt(q-sqrt(q*q+((r-p*p)*(r-p*p)*(r-p*p))));
+	*x -= p;
+	*(x+1) = 1;
+	//now divide our by (z-*x) and solve the remaining quadratic equation
+	Polynomial sol(x, 1);
+	Polynomial quad = this / sol;
+	double *y = solveQuadratic(quad);
+	double *retval = new double[3];
+	*retval = *x, *(retval+1) = *y, *(retval+2) = *(y+1);
+	return retval;
+}
 
 int Polynomial::getDegree() const{ return degree; }
 double *Polynomial::getCoeffs() const{ return coeffs; }
