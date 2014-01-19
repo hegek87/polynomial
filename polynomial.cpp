@@ -1,3 +1,4 @@
+#include <cmath>
 #include "polynomial.h"
 
 Polynomial::Polynomial(){
@@ -49,10 +50,34 @@ Polynomial Polynomial::operator*(const Polynomial& poly){
 	return Polynomial(temp, prodDegree);
 }
 	
-int *Polynomial::solve(){ return 0;}
-int *Polynomial::solveLinear(){ return 0;}
-int *Polynomial::solveQuadratic(){return 0;}
-int *Polynomial::solveCubic(){return 0;}
+double *Polynomial::solve(){ return 0;}
+//Assume that degree == 1
+double *Polynomial::solveLinear(){
+	if(coeffs[1] == 0){ return NULL; }
+	double *x = new double[1];
+	*x = -coeffs[0] / coeffs[1];
+	return x;
+}
+
+// Assuming degree == 2
+double *Polynomial::solveQuadratic(){
+	if(coeffs[2] == 0){ return solveLinear(); }
+	double a = coeffs[2], b = coeffs[1], c = coeffs[0];
+	double d = b*b - 4*a*c;
+	if(d < 0){ return NULL; }
+	if(!d){
+		double *x = new double[1];
+		*x = -b / (2*a);
+		return x;
+	}
+	double *x = new double[2];
+	*x = (-b + sqrt(d))/ (2*a);
+	*(x+1) = (-b - sqrt(d))/ (2*a);
+	return x;
+}
+	
+	
+double *Polynomial::solveCubic(){return 0;}
 
 int Polynomial::getDegree() const{ return degree; }
 double *Polynomial::getCoeffs() const{ return coeffs; }
@@ -63,6 +88,7 @@ int main(void){
 	double temp[2] = {1,2};
 	double temp2[2] = {2,3};
 	Polynomial p1(temp, 1);
+	std::cout << *p1.solveLinear() << std::endl;
 	Polynomial p2(temp2, 1);
 	Polynomial p3 = p1*p2;
 	std::cout << "Polynomial is of degree: " << p3.getDegree() << std::endl;
@@ -71,6 +97,11 @@ int main(void){
 		std::cout << *(data+i) << " ";
 	}
 	std::cout <<std::endl;
+	
+	double t3[3] = {6,-5,1};
+	Polynomial p4(t3, 2);
+	double *ans = p4.solveQuadratic();
+	std::cout << "Root 1: " << *ans << ", Root 2: " << *(ans+1) << std::endl;
 /*
 	double temp[6] = {1,2,3,4,5,6};
 	Polynomial p = Polynomial(temp, 5);

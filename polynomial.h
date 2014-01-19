@@ -15,10 +15,10 @@ class Polynomial{
 		Polynomial operator+(const Polynomial&);
 		Polynomial operator*(const Polynomial&);
 		
-		int *solve();
-		int *solveLinear();
-		int *solveQuadratic();
-		int *solveCubic();
+		double *solve();
+		double *solveLinear();
+		double *solveQuadratic();
+		double *solveCubic();
 		
 		int getDegree() const;
 		double *getCoeffs() const;
