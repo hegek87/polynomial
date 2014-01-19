@@ -9,7 +9,6 @@ class Polynomial{
 	public:
 		Polynomial();
 		Polynomial(double *, int);
-		Polynomial(int);
 		~Polynomial();
 		Polynomial(const Polynomial&);
 		
