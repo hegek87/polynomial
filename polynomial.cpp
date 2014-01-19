@@ -33,10 +33,22 @@ Polynomial Polynomial::operator+(const Polynomial& poly){
 	}
 	return Polynomial(temp, maxDegree);
 }
-
-Polynomial Polynomial::operator/(const Polynomial& poly){
-	return Polynomial();
+/* 
+*  Only handles the case where poly evenly divides this. That
+*  is poly = (this) * h(x) for some polynomial h of degree
+*  poly.degree - this->degree. Uses synthetic division
+*                        ______
+*                  poly ) this
+*/
+Polynomial Polynomial::syntheticDiv(const Polynomial& poly, double root){
+	int divDegree = this->degree - poly.degree
 }
+/*
+Polynomial Polynomial::operator/(const Polynomial& poly){
+	// poly / this
+	int divDegree = this->degree - poly.degree;
+}
+*/
 	
 Polynomial Polynomial::operator*(const Polynomial& poly){ 
 	const int prodDegree = degree + poly.degree;
@@ -53,6 +65,15 @@ Polynomial Polynomial::operator*(const Polynomial& poly){
 }
 	
 double *Polynomial::solve(){ return 0;}
+
+bool Polynomial::zero(){
+	for(int i = 0; i < this->degree+1; ++i){
+		if(this->coeffs[i] != 0){
+			return false;
+		}
+	}
+	return true;
+}
 
 // Assuming degree == 1. It is really important that the
 // return value of this function is delete[]'d after being
@@ -155,6 +176,15 @@ void Polynomial::print(){
 //std::ostream& Polynomial::operator<<(std::ostream& os, const Polynomial& p){}
 
 int main(void){
+	double temp[3] = {-4, 0, 1};
+	Polynomial p(temp, 2);
+	//p.print();
+	double temp2[2] = {-2,1};
+	Polynomial p2(temp2, 1);
+	//p2.print();
+	
+	Polynomial p3 = p/p2;
+/*
 	double temp[2] = {1,2};
 	double temp2[3] = {2,-3, 0};
 	Polynomial p1(temp, 1);
@@ -175,5 +205,6 @@ int main(void){
 	double *ans = p4.solveQuadratic();
 	std::cout<<"Root 1: "<<*ans<<", Root 2: "<<*(ans+1)<<std::endl;
 	delete[] ans;
+	*/
 	return 0;
 }

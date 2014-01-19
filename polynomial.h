@@ -14,7 +14,8 @@ class Polynomial{
 		
 		Polynomial operator+(const Polynomial&);
 		Polynomial operator*(const Polynomial&);
-		Polynomial operator/(const Polynomial&);
+		//Polynomial operator/(const Polynomial&);
+		Polynomial syntheticDiv(const Polynomial&, double);
 		
 		double *solve();
 		double *solveLinear();
@@ -23,6 +24,7 @@ class Polynomial{
 		
 		int getDegree() const;
 		double *getCoeffs() const;
+		bool zero();
 		
 		void print();
 		
