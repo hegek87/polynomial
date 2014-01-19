@@ -14,6 +14,7 @@ class Polynomial{
 		
 		Polynomial operator+(const Polynomial&);
 		Polynomial operator*(const Polynomial&);
+		Polynomial operator/(const Polynomial&);
 		
 		double *solve();
 		double *solveLinear();
@@ -22,6 +23,8 @@ class Polynomial{
 		
 		int getDegree() const;
 		double *getCoeffs() const;
+		
+		void print();
 		
 		//std::ostream& operator<< (std::ostream&, const Polynomial&);
 };
