@@ -214,4 +214,34 @@ void Polynomial::print(){
 	std::cout << std::endl;
 }
 		
-//std::ostream& Polynomial::operator<<(std::ostream& os, const Polynomial& p){}
+std::ostream& operator<<(std::ostream& os, const Polynomial& p){
+	os << "Polynomial is of degree: " << p.degree << std::endl;	
+	for(int i = 0; i < p.degree+1; ++i){
+		if(p.coeffs[i] < 0){
+			if(i == 0){
+				os << p.coeffs[i];
+			}
+			else{
+				os << " - ";
+				if(p.coeffs[i] == -1){ os << ""; }
+				else{ os << (-1 * p.coeffs[i]); }
+				os << "x";
+				if(i == 1){ os << ""; }
+				else{ os << "^"; os << i; }
+			}
+		}
+		else if(p.coeffs[i] == 0){ continue; }
+		else{
+			if(i == 0){ os << p.coeffs[i]; }
+			else{
+				os << " + ";
+				if(p.coeffs[i] == 1){ os << ""; }
+				else{ os << p.coeffs[i]; }
+				os << "x";
+				if(i == 1){ os << ""; }
+				else{ os << "^"; os << i; }
+			}
+		}
+	}
+	return os;
+}

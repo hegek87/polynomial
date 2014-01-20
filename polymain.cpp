@@ -32,7 +32,7 @@ int main(void){
 	Polynomial p1(t1,1),p2(t2,1),p3(t3,1),p4(t4,1);
 	Polynomial p5 = p1*p2*p3*p4;
 	p1.print(); p2.print(); p3.print(); p4.print();
-	p5.print();
+	std::cout << p5  << std::endl;
 	
 	return 0;
 }

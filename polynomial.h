@@ -34,7 +34,7 @@ class Polynomial{
 		
 		void print();
 		
-		//std::ostream& operator<< (std::ostream&, const Polynomial&);
+		friend std::ostream& operator<<(std::ostream&,const Polynomial&);
 };
 #endif
 		
