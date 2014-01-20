@@ -44,18 +44,11 @@ Polynomial Polynomial::syntheticDiv(double root){
 	double temp[divDegree+1];
 	for(int i = 0; i < divDegree+1; ++i){ temp[i] = 0; }
 	temp[divDegree] = this->coeffs[this->degree];
-	std::cout << temp[divDegree] << std::endl;
 	for(int i = divDegree-1; i >= 0; --i){
 		temp[i] = (root*temp[i+1]) + this->coeffs[i+1];
 	}
 	return Polynomial(temp, divDegree);
 }
-/*
-Polynomial Polynomial::operator/(const Polynomial& poly){
-	// poly / this
-	int divDegree = this->degree - poly.degree;
-}
-*/
 	
 Polynomial Polynomial::operator*(const Polynomial& poly){ 
 	const int prodDegree = degree + poly.degree;
@@ -150,6 +143,7 @@ double *Polynomial::solveQuartic(){
 	retval[3] = *(x+2);
 	return retval;
 }
+ 
 	
 Polynomial Polynomial::derivative(){
 	int derivDegree = this->degree-1;
@@ -165,9 +159,11 @@ double Polynomial::newtonRaphson(double guess){
 	Polynomial deriv = this->derivative();
 	double nextGuess = guess;
 	double fVal = this->evaluate(nextGuess);
-	while((fVal - .00000001) > 0){
+	//std::cout << std::abs(fVal) << std::endl;
+	while(std::abs(fVal) > .000000001){
 		nextGuess -= (fVal)/(deriv.evaluate(nextGuess));
 		fVal = this->evaluate(nextGuess);
+		//std::cout << fVal << std::endl;
 	}
 	return nextGuess;
 }
@@ -219,19 +215,36 @@ void Polynomial::print(){
 //std::ostream& Polynomial::operator<<(std::ostream& os, const Polynomial& p){}
 
 int main(void){
-	double temp[4] = {24, -2, -5, 1};
+/*
+	double temp[4] = {48848.8,-1828.8,-132.6,1};
 	Polynomial p(temp, 3);
-	double *res = p.solveCubic();
 	p.print();
-	printf("Root 1: %f, Root 2: %f, Root 3: %f\n", *res,*(res+1),*(res+2));
-	double root = p.newtonRaphson(1.0);
-	printf("ROOT: %f\n", root);
-	printf("p(root) = %f\n", p.evaluate(root));
-	double temp1[2] = {2, 1}, temp2[2] = {-4,1}, temp3[2] = {-3,1};
-	Polynomial p1(temp1,1), p2(temp2,1), p3(temp3,1);
-	p1.print(); p2.print(); p3.print();
+	double *x = p.solveCubic();
+	double y = p.newtonRaphson(1.0);
+	std::cout << "ROOT: ";
+	std::cout << y << std::endl;
+	std::cout << p.evaluate(y) << std::endl;
+	
+	double t1[2]={-*x,1},t2[2]={-*(x+1),1},t3[2]={-*(x+2),1};
+	Polynomial p1(t1,1),p2(t2,1),p3(t3,1);
+	p1.print();
+	p2.print();
+	p3.print();
 	Polynomial p4 = p1*p2*p3;
-	p4.print();
+	p4.print();*/
+
+	double temp[5] = {644804,24708.6,-3579.12,-119.4,1};
+	Polynomial p(temp, 4);
+	double *res = p.solveQuartic();
+	p.print();
+	printf("Root 1: %f, Root 2: %f, Root 3: %f, Root 4: %f\n", 
+		*res,*(res+1),*(res+2),*(res+3));
+	double t1[2]={-*res,1},t2[2]={-*(res+1),1},t3[2]={-*(res+2),1};
+	double t4[2]={-*(res+3),1};
+	Polynomial p1(t1,1),p2(t2,1),p3(t3,1),p4(t4,1);
+	Polynomial p5 = p1*p2*p3*p4;
+	p1.print(); p2.print(); p3.print(); p4.print();
+	p5.print();
 	
 	return 0;
 }
