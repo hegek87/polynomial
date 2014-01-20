@@ -71,7 +71,13 @@ Polynomial Polynomial::operator*(const Polynomial& poly){
 	return Polynomial(temp, prodDegree);
 }
 	
-double *Polynomial::solve(){ return 0;}
+double *Polynomial::solve(){ 
+	if(this->degree == 1){ return this->solveLinear(); }
+	else if(this->degree == 2){ return this->solveQuadratic(); }
+	else{
+		return 0;
+	}
+}
 
 bool Polynomial::zero(){
 	for(int i = 0; i < this->degree+1; ++i){
@@ -109,32 +115,71 @@ double *Polynomial::solveQuadratic(){
 	*(x+1) = (-b - sqrt(d))/ (2*a);
 	return x;
 }
-	
-	
+
 double *Polynomial::solveCubic(){
-	if(coeffs[3] == 0){
-		return solveQuadratic();
-	}
-	if(coeffs[1] == 0 && coeffs[2] == 0){
-		double *x = new double[1];
-		*x = cbrt(-coeffs[0] / coeffs[3]);
-		return x;
-	}
-	if(coeffs[0] == 0){
-		double temp[3] = {coeffs[1], coeffs[2], coeffs[3]};
-		Polynomial p(temp, 2);
-		double *x = p.solveQuadratic();
-		double *y = new double[3];
-		*y = 0, *(y+1) = *x, *(y+2) = *(x+1);
-		return y;
-	}
-	double a = coeffs[3], b = coeffs[2], c = coeffs[1], d = coeffs[0];
-	double k, p, q;
-	if(b != 0){
-		k = -b / (3*a);
-		p = (3*a*c-b*b)/(-3*a*a);
-		q = (2*b*b*b-9*a*b*c+27*a*a*d)/(-27*a*a*a);
+        if(coeffs[3] == 0){
+                return solveQuadratic();
+        }
+        if(coeffs[1] == 0 && coeffs[2] == 0){
+                double *x = new double[1];
+                *x = cbrt(-coeffs[0] / coeffs[3]);
+                return x;
+        }
+        if(coeffs[0] == 0){
+                double temp[3] = {coeffs[1], coeffs[2], coeffs[3]};
+                Polynomial p(temp, 2);
+                double *x = p.solveQuadratic();
+                double *y = new double[3];
+                *y = 0, *(y+1) = *x, *(y+2) = *(x+1);
+                return y;
+        }
+        double firstRoot = this->newtonRaphson(1.0);
+        Polynomial quad = this->syntheticDiv(firstRoot);
+        double *x = quad.solveQuadratic();
+        double *retval = new double[3];
+        retval[0] = firstRoot, retval[1] = *x, retval[2] = *(x+1);
+        return retval;
 }
+
+double *Polynomial::solveQuartic(){
+	double firstRoot = this->newtonRaphson(1.0);
+	Polynomial cubic = this->syntheticDiv(firstRoot);
+	double *x = cubic.solveCubic();
+	double *retval = new double[4];
+	retval[0] = firstRoot, retval[1] = *x, retval[2] = *(x+1);
+	retval[3] = *(x+2);
+	return retval;
+}
+	
+Polynomial Polynomial::derivative(){
+	int derivDegree = this->degree-1;
+	double temp[derivDegree+1];
+	for(int i = 0; i < derivDegree+1; ++i){ temp[i] = 0; }
+	for(int i = 0; i < derivDegree+1; ++i){
+		temp[i] = (i+1)*this->coeffs[i+1];
+	}
+	return Polynomial(temp, derivDegree);
+}
+
+double Polynomial::newtonRaphson(double guess){
+	Polynomial deriv = this->derivative();
+	double nextGuess = guess;
+	double fVal = this->evaluate(nextGuess);
+	while((fVal - .00000001) > 0){
+		nextGuess -= (fVal)/(deriv.evaluate(nextGuess));
+		fVal = this->evaluate(nextGuess);
+	}
+	return nextGuess;
+}
+
+double Polynomial::evaluate(double val){
+	double temp = this->coeffs[0];
+	for(int i = 1; i < this->degree+1; ++i){
+		temp += this->coeffs[i] * pow(val, i);
+	}
+	return temp;
+}
+
 
 int Polynomial::getDegree() const{ return degree; }
 double *Polynomial::getCoeffs() const{ return coeffs; }
@@ -176,46 +221,17 @@ void Polynomial::print(){
 int main(void){
 	double temp[4] = {24, -2, -5, 1};
 	Polynomial p(temp, 3);
+	double *res = p.solveCubic();
 	p.print();
-	double *x = p.solveCubic();
-	for(int i = 0; i < 3; ++i){
-		std::cout << "Root ";
-		std::cout << i+1;
-		std::cout << ": ";
-		std::cout << *x;
-		std::cout << ", ";
-	}
-	std::cout << std::endl;
-/*
-	double temp[3] = {-4, 0, 1};
-	Polynomial p(temp, 2);
-	//p.print();
-	double temp2[2] = {-2,1};
-	Polynomial p2(temp2, 1);
-	//p2.print();
+	printf("Root 1: %f, Root 2: %f, Root 3: %f\n", *res,*(res+1),*(res+2));
+	double root = p.newtonRaphson(1.0);
+	printf("ROOT: %f\n", root);
+	printf("p(root) = %f\n", p.evaluate(root));
+	double temp1[2] = {2, 1}, temp2[2] = {-4,1}, temp3[2] = {-3,1};
+	Polynomial p1(temp1,1), p2(temp2,1), p3(temp3,1);
+	p1.print(); p2.print(); p3.print();
+	Polynomial p4 = p1*p2*p3;
+	p4.print();
 	
-	Polynomial p3 = p/p2;*/
-/*
-	double temp[2] = {1,2};
-	double temp2[3] = {2,-3, 0};
-	Polynomial p1(temp, 1);
-	p1.print();
-
-	double *solSet = p1.solveLinear();
-	std::cout << *solSet << std::endl;
-	delete[] solSet;
-
-	Polynomial p2(temp2, 2);
-	p2.print();
-	
-	Polynomial p3 = p1*p2;
-	p3.print();
-	
-	double t3[3] = {6,-5,1};
-	Polynomial p4(t3, 2);
-	double *ans = p4.solveQuadratic();
-	std::cout<<"Root 1: "<<*ans<<", Root 2: "<<*(ans+1)<<std::endl;
-	delete[] ans;
-	*/
 	return 0;
 }

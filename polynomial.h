@@ -21,6 +21,12 @@ class Polynomial{
 		double *solveLinear();
 		double *solveQuadratic();
 		double *solveCubic();
+		double *solveQuartic();
+		
+		Polynomial derivative();
+		
+		double newtonRaphson(double);
+		double evaluate(double);
 		
 		int getDegree() const;
 		double *getCoeffs() const;
