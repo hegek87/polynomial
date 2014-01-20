@@ -15,7 +15,7 @@ class Polynomial{
 		Polynomial operator+(const Polynomial&);
 		Polynomial operator*(const Polynomial&);
 		//Polynomial operator/(const Polynomial&);
-		Polynomial syntheticDiv(const Polynomial&, double);
+		Polynomial syntheticDiv(double);
 		
 		double *solve();
 		double *solveLinear();

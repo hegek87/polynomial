@@ -1,5 +1,6 @@
 #include <cmath>
 #include <string>
+#include <stdio.h>
 #include "polynomial.h"
 
 Polynomial::Polynomial(){
@@ -37,11 +38,17 @@ Polynomial Polynomial::operator+(const Polynomial& poly){
 *  Only handles the case where poly evenly divides this. That
 *  is poly = (this) * h(x) for some polynomial h of degree
 *  poly.degree - this->degree. Uses synthetic division
-*                        ______
-*                  poly ) this
 */
-Polynomial Polynomial::syntheticDiv(const Polynomial& poly, double root){
-	int divDegree = this->degree - poly.degree
+Polynomial Polynomial::syntheticDiv(double root){
+	int divDegree = this->degree - 1;
+	double temp[divDegree+1];
+	for(int i = 0; i < divDegree+1; ++i){ temp[i] = 0; }
+	temp[divDegree] = this->coeffs[this->degree];
+	std::cout << temp[divDegree] << std::endl;
+	for(int i = divDegree-1; i >= 0; --i){
+		temp[i] = (root*temp[i+1]) + this->coeffs[i+1];
+	}
+	return Polynomial(temp, divDegree);
 }
 /*
 Polynomial Polynomial::operator/(const Polynomial& poly){
@@ -122,20 +129,11 @@ double *Polynomial::solveCubic(){
 		return y;
 	}
 	double a = coeffs[3], b = coeffs[2], c = coeffs[1], d = coeffs[0];
-	double p = -b / (3*a), q = (p*p*p)+((b*c-3*a*d)/(6*a*a));
-	double r = c / (3*a);
-	double *x = new double[2];
-	*x = cbrt(q + sqrt(q*q+((r-p*p)*(r-p*p)*(r-p*p))));
-	*x += cbrt(q-sqrt(q*q+((r-p*p)*(r-p*p)*(r-p*p))));
-	*x -= p;
-	*(x+1) = 1;
-	//now divide our by (z-*x) and solve the remaining quadratic equation
-	Polynomial sol(x, 1);
-	Polynomial quad = *this / sol;
-	double *y = quad.solveQuadratic();
-	double *retval = new double[3];
-	*retval = *x, *(retval+1) = *y, *(retval+2) = *(y+1);
-	return retval;
+	double k, p, q;
+	if(b != 0){
+		k = -b / (3*a);
+		p = (3*a*c-b*b)/(-3*a*a);
+		q = (2*b*b*b-9*a*b*c+27*a*a*d)/(-27*a*a*a);
 }
 
 int Polynomial::getDegree() const{ return degree; }
@@ -176,6 +174,19 @@ void Polynomial::print(){
 //std::ostream& Polynomial::operator<<(std::ostream& os, const Polynomial& p){}
 
 int main(void){
+	double temp[4] = {24, -2, -5, 1};
+	Polynomial p(temp, 3);
+	p.print();
+	double *x = p.solveCubic();
+	for(int i = 0; i < 3; ++i){
+		std::cout << "Root ";
+		std::cout << i+1;
+		std::cout << ": ";
+		std::cout << *x;
+		std::cout << ", ";
+	}
+	std::cout << std::endl;
+/*
 	double temp[3] = {-4, 0, 1};
 	Polynomial p(temp, 2);
 	//p.print();
@@ -183,7 +194,7 @@ int main(void){
 	Polynomial p2(temp2, 1);
 	//p2.print();
 	
-	Polynomial p3 = p/p2;
+	Polynomial p3 = p/p2;*/
 /*
 	double temp[2] = {1,2};
 	double temp2[3] = {2,-3, 0};
