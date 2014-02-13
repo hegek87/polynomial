@@ -33,6 +33,27 @@ int main(void){
 	Polynomial p5 = p1*p2*p3*p4;
 	p1.print(); p2.print(); p3.print(); p4.print();
 	std::cout << p5  << std::endl;
+	double te1[4] = {-6,-1,0,1};
+	Polynomial po1(temp, 3);
+	double *x = po1.solve();
+	std::cout << "ROOT 1: " << *x << std::endl;
+	std::cout << "ROOT 2: " << *(x+1) << std::endl;
+	std::cout << "ROOT 3: " << *(x+2) << std::endl;
 	
+	/*
+	int x = 255;
+	int bitCount = 0;
+	char bitString[8];
+	for(int i = 0; i < 8; ++i){ bitString[i] = '0'; }
+	printf("%s\n", bitString);
+	for(int j = 0; j < 8; ++j){
+		if((x & (1 << j)) != 0){
+			bitString[8-(j+1)] = '1';
+			++bitCount;
+		}
+	}
+	std::cout << bitCount << std::endl;
+	printf("%s\n", bitString);
+	*/
 	return 0;
 }
