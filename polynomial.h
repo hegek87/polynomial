@@ -1,14 +1,15 @@
 #ifndef POLY_H
 #define POLY_H
 #include <iostream>
+#include <vector>
 
 class Polynomial{
 	private:
 		int degree;
-		double *coeffs;
+		std::vector<double> coeffs;
 	public:
 		Polynomial();
-		Polynomial(double *, int);
+		Polynomial(std::vector<double>, int);
 		~Polynomial();
 		Polynomial(const Polynomial&);
 		
@@ -17,11 +18,11 @@ class Polynomial{
 		//Polynomial operator/(const Polynomial&);
 		Polynomial syntheticDiv(double);
 		
-		double *solve();
-		double *solveLinear();
-		double *solveQuadratic();
-		double *solveCubic();
-		double *solveQuartic();
+		std::vector<double> solve();
+		std::vector<double> solveLinear();
+		std::vector<double> solveQuadratic();
+		std::vector<double> solveCubic();
+		std::vector<double> solveQuartic();
 		
 		Polynomial derivative();
 		
@@ -29,8 +30,10 @@ class Polynomial{
 		double evaluate(double);
 		
 		int getDegree() const;
-		double *getCoeffs() const;
+		const std::vector<double> getCoeffs() const;
 		bool zero();
+		
+		bool equals(const Polynomial&);
 		
 		void print();
 		

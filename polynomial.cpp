@@ -3,34 +3,23 @@
 #include <stdio.h>
 #include "polynomial.h"
 
-Polynomial::Polynomial(){
-	degree = 0;
-	coeffs = new double[1];
-	coeffs[0] = 0;
-}
+Polynomial::Polynomial() : degree(0), coeffs(1,0) {}
 
-Polynomial::Polynomial(double *poly, int degree){
-	this->degree = degree;
-	coeffs = new double[degree+1];
-	for(int i = 0; i < degree+1; ++i){
-		coeffs[i] = poly[i];
-	}
-}
+Polynomial::Polynomial(std::vector<double> coeffs, int degree):
+	degree(degree), 
+	coeffs(coeffs) {}
 
-Polynomial::~Polynomial(){
-	delete[] coeffs;
-}
+Polynomial::~Polynomial(){}
 
-Polynomial::Polynomial(const Polynomial& poly){
-	degree = poly.degree;
-	coeffs = poly.coeffs;
-}
-	
+Polynomial::Polynomial(const Polynomial& copy) : 
+	degree(copy.degree),
+	coeffs(copy.coeffs) {}
+		
 Polynomial Polynomial::operator+(const Polynomial& poly){
 	int maxDegree = (degree > poly.degree) ? degree : poly.degree;
-	double *temp = new double[maxDegree+1];
+	std::vector<double> temp;
 	for(int i = 0; i < maxDegree+1; ++i){
-		temp[i] = coeffs[i] + poly.coeffs[i];
+		temp.push_back(coeffs[i] + poly.coeffs[i]);
 	}
 	return Polynomial(temp, maxDegree);
 }
@@ -41,8 +30,7 @@ Polynomial Polynomial::operator+(const Polynomial& poly){
 */
 Polynomial Polynomial::syntheticDiv(double root){
 	int divDegree = this->degree - 1;
-	double temp[divDegree+1];
-	for(int i = 0; i < divDegree+1; ++i){ temp[i] = 0; }
+	std::vector<double> temp(divDegree+1,0);
 	temp[divDegree] = this->coeffs[this->degree];
 	for(int i = divDegree-1; i >= 0; --i){
 		temp[i] = (root*temp[i+1]) + this->coeffs[i+1];
@@ -52,9 +40,8 @@ Polynomial Polynomial::syntheticDiv(double root){
 	
 Polynomial Polynomial::operator*(const Polynomial& poly){ 
 	const int prodDegree = degree + poly.degree;
-	double temp[prodDegree+1];
+	std::vector<double> temp(prodDegree+1,0);
 	//initialize to zero
-	for(int i = 0; i < prodDegree+1; ++i){ temp[i] = 0; }
 	for(int i = 0; i < degree+1; ++i){
 		for(int j = 0; j < poly.degree+1; ++j){
 			double t = coeffs[i] * poly.coeffs[j];
@@ -64,14 +51,14 @@ Polynomial Polynomial::operator*(const Polynomial& poly){
 	return Polynomial(temp, prodDegree);
 }
 	
-double *Polynomial::solve(){ 
+std::vector<double> Polynomial::solve(){ 
 	if(this->degree == 1){ return this->solveLinear(); }
 	else if(this->degree == 2){ return this->solveQuadratic(); }
-	else if(this->degree == 3){ return this->solveCubic(); }
-	else if(this->degree == 4){ return this->solveQuartic(); }
+	//else if(this->degree == 3){ return this->solveCubic(); }
+	//else if(this->degree == 4){ return this->solveQuartic(); }
 	else{
 		/* this->degree > 4 not implemented yet */
-		return 0;
+		return std::vector<double>(1,0);
 	}
 }
 
@@ -84,34 +71,26 @@ bool Polynomial::zero(){
 	return true;
 }
 
-// Assuming degree == 1. It is really important that the
-// return value of this function is delete[]'d after being
-// called.
-double *Polynomial::solveLinear(){
-	if(coeffs[1] == 0){ return NULL; }
-	double *x = new double[1];
-	x[0] = -coeffs[0] / coeffs[1];
-	return x;
+// Degree == 1
+std::vector<double> Polynomial::solveLinear(){
+	if(coeffs[1] == 0){ return std::vector<double>(); }
+	return std::vector<double>(1, -coeffs[0]/coeffs[1]);
 }
 
-// Assuming degree == 2. We must call delete[] on the return
-// value of this function after it is no longer needed.
-double *Polynomial::solveQuadratic(){
+// Assuming degree == 2. 
+std::vector<double> Polynomial::solveQuadratic(){
 	if(coeffs[2] == 0){ return solveLinear(); }
 	double a = coeffs[2], b = coeffs[1], c = coeffs[0];
 	double d = b*b - 4*a*c;
-	if(d < 0){ return NULL; }
+	if(d < 0){ return std::vector<double>(); }
 	if(!d){
-		double *x = new double[1];
-		*x = -b / (2*a);
-		return x;
+		return std::vector<double>(1, -b/(2*a));
 	}
-	double *x = new double[2];
-	*x = (-b + sqrt(d))/ (2*a);
-	*(x+1) = (-b - sqrt(d))/ (2*a);
-	return x;
+	double solSet[] = { (-b+sqrt(d))/(2*a), (-b-sqrt(d))/(2*a) };
+	return std::vector<double>(solSet, solSet+(2*sizeof(double)));
 }
 
+/*
 double *Polynomial::solveCubic(){
         if(coeffs[3] == 0){
                 return solveQuadratic();
@@ -177,11 +156,22 @@ double Polynomial::evaluate(double val){
 	}
 	return temp;
 }
-
+*/
 
 int Polynomial::getDegree() const{ return degree; }
-double *Polynomial::getCoeffs() const{ return coeffs; }
+const std::vector<double> Polynomial::getCoeffs() const{ return coeffs; }
 
+bool Polynomial::equals(const Polynomial& other){
+	if(this->degree != other.degree){ return false; }
+	for(int i = 0; i < this->degree; ++i){
+		if(std::abs(this->coeffs[i]-other.coeffs[i]) > 0.01){
+			return false;
+		}
+	}
+	return true;
+}
+
+/*
 void Polynomial::print(){
 	std::cout << "Polynomial is of degree: " << degree << std::endl;	
 	for(int i = 0; i < degree+1; ++i){
@@ -245,3 +235,4 @@ std::ostream& operator<<(std::ostream& os, const Polynomial& p){
 	}
 	return os;
 }
+*/
