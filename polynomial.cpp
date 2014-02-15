@@ -91,14 +91,12 @@ std::vector<double> Polynomial::solveQuadratic(){
 }
 
 /*
-double *Polynomial::solveCubic(){
+std::vector<double> Polynomial::solveCubic(){
         if(coeffs[3] == 0){
                 return solveQuadratic();
         }
         if(coeffs[1] == 0 && coeffs[2] == 0){
-                double *x = new double[1];
-                *x = cbrt(-coeffs[0] / coeffs[3]);
-                return x;
+                return std::vector<double>(1,cbrt(-coeffs[0]/coeffs[3]));
         }
         if(coeffs[0] == 0){
                 double temp[3] = {coeffs[1], coeffs[2], coeffs[3]};
@@ -171,7 +169,7 @@ bool Polynomial::equals(const Polynomial& other){
 	return true;
 }
 
-/*
+
 void Polynomial::print(){
 	std::cout << "Polynomial is of degree: " << degree << std::endl;	
 	for(int i = 0; i < degree+1; ++i){
@@ -235,4 +233,4 @@ std::ostream& operator<<(std::ostream& os, const Polynomial& p){
 	}
 	return os;
 }
-*/
+

@@ -36,6 +36,25 @@ TEST(Addition){
 	CHECK((pl1+pl3).equals(vo3));
 }
 
+TEST(Multiplication){
+	std::vector<double> v1,v2,v3;
+	v1.push_back(1),v1.push_back(5);
+	v2.push_back(3),v2.push_back(10);
+	v3.push_back(2),v3.push_back(1),v3.push_back(5);
+	Polynomial p1(v1,1),p2(v2,1),p3(v3,2);
+	
+	std::vector<double> a1,a2,a3;
+	a1.push_back(3),a1.push_back(25),a1.push_back(50);
+	a2.push_back(6),a2.push_back(23),a2.push_back(25),a2.push_back(50);
+	a3.push_back(6),a3.push_back(53),a3.push_back(140),a3.push_back(175);
+	a3.push_back(250);
+	Polynomial al1(a1,2),al2(a2,3),al3(a3,4);
+	
+	CHECK((p1*p2).equals(al1));
+	CHECK((p2*p3).equals(al2));
+	CHECK((p1*p2*p3).equals(al3));
+}
+
 int main(void){
 	return UnitTest::RunAllTests();
 }
