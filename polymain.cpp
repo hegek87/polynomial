@@ -112,6 +112,18 @@ TEST(SolveQuadratic){
 	CHECK_CLOSE(p2.solveLinear()[0],(p1*p2).solveQuadratic()[0],0.01);
 }
 
+TEST(Derivative){
+	std::vector<double> v1,v2,v3,v4;
+	v1.push_back(1);
+	v2.push_back(1),v2.push_back(5);
+	v3.push_back(0),v3.push_back(0),v3.push_back(2),v3.push_back(4);
+	v4.push_back(0),v4.push_back(1),v4.push_back(0),v4.push_back(2);
+	
+	Polynomial p1(v1,0),p2(v2,1),p3(v3,3),p4(v4,3);
+	
+	std::vector<double> e1,e2,e3,e4;
+	e1.push_back(0);
+
 int main(void){
 	return UnitTest::RunAllTests();
 }

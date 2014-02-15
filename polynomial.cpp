@@ -117,18 +117,17 @@ double *Polynomial::solveQuartic(){
 	retval[0] = firstRoot, retval[1] = *x, retval[2] = *(x+1);
 	retval[3] = *(x+2);
 	return retval;
-}
+}*/
 
 Polynomial Polynomial::derivative(){
 	int derivDegree = this->degree-1;
-	double temp[derivDegree+1];
-	for(int i = 0; i < derivDegree+1; ++i){ temp[i] = 0; }
+	std::vector<double> temp(derivDegree+1,0);
 	for(int i = 0; i < derivDegree+1; ++i){
 		temp[i] = (i+1)*this->coeffs[i+1];
 	}
 	return Polynomial(temp, derivDegree);
 }
-
+/*
 double Polynomial::newtonRaphson(double guess){
 	Polynomial deriv = this->derivative();
 	double nextGuess = guess;
