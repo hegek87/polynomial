@@ -10,8 +10,6 @@ class Polynomial{
 	public:
 		Polynomial();
 		Polynomial(std::vector<double>, int);
-		~Polynomial();
-		Polynomial(const Polynomial&);
 		
 		Polynomial operator+(const Polynomial&);
 		Polynomial operator*(const Polynomial&);

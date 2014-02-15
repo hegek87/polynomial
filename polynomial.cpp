@@ -9,11 +9,6 @@ Polynomial::Polynomial(std::vector<double> coeffs, int degree):
 	degree(degree), 
 	coeffs(coeffs) {}
 
-Polynomial::~Polynomial(){}
-
-Polynomial::Polynomial(const Polynomial& copy) : 
-	degree(copy.degree),
-	coeffs(copy.coeffs) {}
 		
 Polynomial Polynomial::operator+(const Polynomial& poly){
 	int maxDegree = (degree > poly.degree) ? degree : poly.degree;

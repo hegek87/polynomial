@@ -55,6 +55,63 @@ TEST(Multiplication){
 	CHECK((p1*p2*p3).equals(al3));
 }
 
+TEST(SyntheticDivision){
+	std::vector<double> v1,v2,v3;
+	v1.push_back(-1),v1.push_back(1);
+	v2.push_back(1),v2.push_back(5),v2.push_back(4),v2.push_back(10);
+	v3.push_back(1),v3.push_back(1);
+	Polynomial p1(v1,1),p2(v2,3),p3(v3,1);
+	CHECK((p1*p2).syntheticDiv(1).equals(p2));
+	CHECK((p1*p3).syntheticDiv(1).equals(p3));
+	CHECK((p2*p3).syntheticDiv(-1).equals(p2));
+}
+
+TEST(CheckZero){
+	std::vector<double> v1(10,0),v2(5,0),v3,v4;
+	v3.push_back(1);
+	v4.push_back(0),v4.push_back(0),v4.push_back(0),v4.push_back(25);
+	Polynomial p1(v1,9),p2(v2,4),p3(v3,0),p4(v4,3);
+	CHECK(p1.zero());
+	CHECK(p2.zero());
+	CHECK(!p3.zero());
+	CHECK(!p4.zero());
+}
+
+TEST(SolveLinear){
+	std::vector<double> v1,v2,v3,v4;
+	v1.push_back(1),v1.push_back(10);
+	v2.push_back(-50),v2.push_back(10);
+	v3.push_back(-13),v3.push_back(100);
+	v4.push_back(1.0986),v4.push_back(139.1434);
+	
+	Polynomial p1(v1,1),p2(v2,1),p3(v3,1),p4(v4,1);
+	CHECK_CLOSE(-(1.0/10.0),p1.solveLinear()[0],0.01);
+	CHECK_CLOSE(5,p2.solveLinear()[0],0.01);
+	CHECK_CLOSE(13.0/100.0,p3.solveLinear()[0],0.01);
+	CHECK_CLOSE(-(1.0986/139.1434),p4.solveLinear()[0],0.01);
+}
+
+TEST(SolveQuadratic){
+	std::vector<double> v1,v2,v3,v4,v5,v6,v7,v8;
+	v1.push_back(2),v1.push_back(1);
+	v2.push_back(4),v2.push_back(2);
+	
+	v3.push_back(5),v3.push_back(1);
+	v4.push_back(10),v4.push_back(5);
+	
+	v5.push_back(4.8),v5.push_back(1);
+	v6.push_back(8.12),v6.push_back(12);
+	
+	v7.push_back(12),v7.push_back(1);
+	v8.push_back(16),v8.push_back(4);
+	
+	Polynomial p1(v1,1),p2(v2,1),p3(v3,1),p4(v4,1);
+	Polynomial p5(v5,1),p6(v6,1),p7(v7,1),p8(v8,1);
+	
+	CHECK_CLOSE(p1.solveLinear()[0],(p1*p2).solveQuadratic()[0],0.01);
+	CHECK_CLOSE(p2.solveLinear()[0],(p1*p2).solveQuadratic()[0],0.01);
+}
+
 int main(void){
 	return UnitTest::RunAllTests();
 }
