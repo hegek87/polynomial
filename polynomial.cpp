@@ -120,23 +120,21 @@ double *Polynomial::solveQuartic(){
 }*/
 
 Polynomial Polynomial::derivative(){
-	int derivDegree = this->degree-1;
+	int derivDegree = (this->degree == 0) ? 0 : this->degree-1;
 	std::vector<double> temp(derivDegree+1,0);
 	for(int i = 0; i < derivDegree+1; ++i){
 		temp[i] = (i+1)*this->coeffs[i+1];
 	}
 	return Polynomial(temp, derivDegree);
 }
-/*
+
 double Polynomial::newtonRaphson(double guess){
 	Polynomial deriv = this->derivative();
 	double nextGuess = guess;
 	double fVal = this->evaluate(nextGuess);
-	//std::cout << std::abs(fVal) << std::endl;
 	while(std::abs(fVal) > .000000001){
 		nextGuess -= (fVal)/(deriv.evaluate(nextGuess));
 		fVal = this->evaluate(nextGuess);
-		//std::cout << fVal << std::endl;
 	}
 	return nextGuess;
 }
@@ -148,7 +146,7 @@ double Polynomial::evaluate(double val){
 	}
 	return temp;
 }
-*/
+
 
 int Polynomial::getDegree() const{ return degree; }
 const std::vector<double> Polynomial::getCoeffs() const{ return coeffs; }
