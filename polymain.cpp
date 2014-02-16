@@ -171,6 +171,20 @@ TEST(NewtonRaphson){
 	// (x^2-2x-8)=(x-4)(x+2)
 }
 
+TEST(SolveCubic){
+	std::vector<double> v1,v2,v3;
+	v1.push_back(-1),v1.push_back(1);
+	v2.push_back(-5),v2.push_back(1);
+	v3.push_back(7),v3.push_back(1);
+	
+	Polynomial p1(v1,1),p2(v2,1),p3(v3,1);
+	
+	std::vector<double> solSet = (p1*p2*p3).solveCubic();
+	CHECK_CLOSE(5,solSet[0],0.01);
+	CHECK_CLOSE(-7,solSet[1],0.01);
+	CHECK_CLOSE(1,solSet[2],0.01);
+}
+
 int main(void){
 	return UnitTest::RunAllTests();
 }
