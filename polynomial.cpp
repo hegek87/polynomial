@@ -133,6 +133,7 @@ double Polynomial::newtonRaphson(double guess){
 	double nextGuess = guess;
 	double fVal = this->evaluate(nextGuess);
 	while(std::abs(fVal) > .000000001){
+		if(0 == deriv.evaluate(nextGuess)){ nextGuess += 1; }
 		nextGuess -= (fVal)/(deriv.evaluate(nextGuess));
 		fVal = this->evaluate(nextGuess);
 	}

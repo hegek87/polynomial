@@ -164,10 +164,10 @@ TEST(NewtonRaphson){
 	
 	Polynomial p1(v1,1),p2(v2,2),p3(v3,3),p4(v4,2);
 	
-	CHECK_CLOSE(10,p1.newtonRaphson(2.0),0.01);
-	CHECK_CLOSE(2,p2.newtonRaphson(2.0),0.01);
-	CHECK_CLOSE(2,p3.newtonRaphson(2.0),0.01);
-	CHECK_CLOSE(4,p4.newtonRaphson(2.0),0.01);
+	CHECK_CLOSE(10,p1.newtonRaphson(1.0),0.01);
+	CHECK_CLOSE(2,p2.newtonRaphson(1.0),0.01);
+	CHECK_CLOSE(2,p3.newtonRaphson(1.0),0.01);
+	CHECK_CLOSE(4,p4.newtonRaphson(1.0),0.01);
 	// (x^2-2x-8)=(x-4)(x+2)
 }
 
