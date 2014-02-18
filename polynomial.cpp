@@ -49,8 +49,8 @@ Polynomial Polynomial::operator*(const Polynomial& poly){
 std::vector<double> Polynomial::solve(){ 
 	if(this->degree == 1){ return this->solveLinear(); }
 	else if(this->degree == 2){ return this->solveQuadratic(); }
-	//else if(this->degree == 3){ return this->solveCubic(); }
-	//else if(this->degree == 4){ return this->solveQuartic(); }
+	else if(this->degree == 3){ return this->solveCubic(); }
+	else if(this->degree == 4){ return this->solveQuartic(); }
 	else{
 		/* this->degree > 4 not implemented yet */
 		return std::vector<double>(1,0);
