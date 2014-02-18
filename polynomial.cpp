@@ -111,38 +111,19 @@ std::vector<double> Polynomial::solveCubic(){
 	retVal.push_back(firstRoot);
 	return retVal;
 }
-/*
-std::vector<double> Polynomial::solveCubic(){
-        if(coeffs[3] == 0){}
-        if(coeffs[1] == 0 && coeffs[2] == 0){
-                return std::vector<double>(1,cbrt(-coeffs[0]/coeffs[3]));
-        }
-        if(coeffs[0] == 0){
-        	
-                double temp[3] = {coeffs[1], coeffs[2], coeffs[3]};
-                Polynomial p(temp, 2);
-                double *x = p.solveQuadratic();
-                double *y = new double[3];
-                *y = 0, *(y+1) = *x, *(y+2) = *(x+1);
-                return y;
-        }
-        double firstRoot = this->newtonRaphson(1.0);
-        Polynomial quad = this->syntheticDiv(firstRoot);
-        double *x = quad.solveQuadratic();
-        double *retval = new double[3];
-        retval[0] = firstRoot, retval[1] = *x, retval[2] = *(x+1);
-        return retval;
-}*/
-/*
-double *Polynomial::solveQuartic(){
+
+
+std::vector<double> Polynomial::solveQuartic(){
 	double firstRoot = this->newtonRaphson(1.0);
 	Polynomial cubic = this->syntheticDiv(firstRoot);
-	double *x = cubic.solveCubic();
-	double *retval = new double[4];
-	retval[0] = firstRoot, retval[1] = *x, retval[2] = *(x+1);
-	retval[3] = *(x+2);
-	return retval;
-}*/
+	std::vector<double> temp = cubic.solveCubic();
+	std::vector<double> retVal;
+	retVal.push_back(temp[0]);
+	retVal.push_back(temp[1]);
+	retVal.push_back(temp[2]);
+	retVal.push_back(firstRoot);
+	return retVal;
+}
 
 Polynomial Polynomial::derivative(){
 	int derivDegree = (this->degree == 0) ? 0 : this->degree-1;
